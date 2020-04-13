@@ -26,7 +26,7 @@ class TestTabLogic {
     var tests = []
     let files
     try {
-      files = await this.fileManager.getFolder(path)
+      files = await this.fileManager.readdir(path)
     } catch (e) {
       cb(e.message)
     }
