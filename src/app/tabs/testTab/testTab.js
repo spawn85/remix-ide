@@ -14,7 +14,7 @@ class TestTabLogic {
     helper.createNonClashingNameWithPrefix(path + '/test.sol', fileProvider, '_test', (error, newFile) => {
       if (error) return modalDialogCustom.alert('Failed to create file. ' + newFile + ' ' + error)
       if (!fileProvider.set(newFile, this.generateTestContractSample())) return modalDialogCustom.alert('Failed to create test file ' + newFile)
-      this.fileManager.switchFile(newFile)
+      this.fileManager.open(newFile)
     })
   }
 
