@@ -4,7 +4,7 @@ var tooltip = require('../ui/tooltip')
 var css = require('./styles/test-tab-styles')
 var remixTests = require('remix-tests')
 import { ViewPlugin } from '@remixproject/engine'
-import { canUseWorker } from '../compiler/compiler-utils'
+import { canUseWorker, baseUrl } from '../compiler/compiler-utils'
 
 const TestTabLogic = require('./testTab/testTab')
 
@@ -29,7 +29,6 @@ module.exports = class TestTab extends ViewPlugin {
     this.data = {}
     this.appManager = appManager
     this.renderer = renderer
-    this.baseurl = 'https://solc-bin.ethereum.org/bin'
     appManager.event.on('activate', (name) => {
       if (name === 'solidity') this.updateRunAction(fileManager.currentFile())
     })
@@ -167,7 +166,7 @@ module.exports = class TestTab extends ViewPlugin {
       let runningTest = {}
       runningTest[path] = { content }
       const {currentVersion, evmVersion, optimize} = this.compileTab.getCurrentCompilerConfig()
-      const currentCompilerUrl = this.baseurl + '/' + currentVersion
+      const currentCompilerUrl = baseUrl + '/' + currentVersion
       const compilerConfig = {
         currentCompilerUrl,
         evmVersion,
@@ -189,7 +188,7 @@ module.exports = class TestTab extends ViewPlugin {
       const runningTest = {}
       runningTest[testFilePath] = { content }
       const {currentVersion, evmVersion, optimize} = this.compileTab.getCurrentCompilerConfig()
-      const currentCompilerUrl = this.baseurl + '/' + currentVersion
+      const currentCompilerUrl = baseUrl + '/' + currentVersion
       const compilerConfig = {
         currentCompilerUrl,
         evmVersion,
