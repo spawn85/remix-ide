@@ -79,9 +79,61 @@ Please note the following:
 Please see the [solidity docs](https://solidity.readthedocs.io/en/latest/contracts.html#receive-ether-function  ) for more specifics about using the **fallback** and **receive** functions. 
 
 ### Passing in a tuple or a struct to a function
-To pass a tuple in, you need to put in an an array [].
+To pass a tuple in, you need to put in an  array [].
 
 Similarly, to pass in a struct as a parameter of a function, it needs to be put in as an array [].  Also note that the line
 `pragma experimental ABIEncoderV2;`
 needs to put in at the top of the solidity file.
 
+### Example of passing nested struct to a function
+Consider a nested struct defined like this:
+```
+struct PurchaseOrder
+{
+    uint numA;  
+    uint numB;
+    PurchaseOrderItem[] items;
+}
+struct PurchaseOrderItem
+{
+    uint numC;                    
+}
+```
+If a function has signature `function someFunction(PurchaseOrder memory po)` then the correct syntax is:
+```
+[1, 1, [[1]]]
+```
+Now let's make this example just a little more complicated.  Here's a sample contract:
+
+```
+pragma solidity >=0.4.22 <0.7.0;
+pragma experimental ABIEncoderV2;
+
+contract Supplies {
+    struct PurchaseOrder {
+      uint numA;  
+      uint numB;
+      PurchaseOrderItem[] items;
+    }
+    struct PurchaseOrderItem {
+        uint itemNum;
+        string description;
+    }
+    
+    function disFunk(PurchaseOrder memory po) public {
+        uint a = po.numA;
+        uint b = po.numB;
+        PurchaseOrderItem[] memory c = po.items;
+        uint d = po.items[0].itemNum;
+        // string memory e = po.items.andAstring;
+    }
+}
+```
+
+When we deploy this contract and open up the **deployed instance** in the Deploy & Run module AND then in the function  **disFunk** would take following input parameters:
+
+```
+[1,1,[[8,"melon"]]]
+```
+
+The function disFunk accepts a single parameter of the type **PurchaseOrder**. PurchaseOrder is a struct and structs get passed in inside **square brackets**.  The nested array of structs `items` is an array of PurchaseOrderItem so it gets another set of square brackets.  Thus the double square brackets.
